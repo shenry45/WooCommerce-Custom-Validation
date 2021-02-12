@@ -8,6 +8,8 @@
      * Author URI:        http://shawnphenry.com/
      **/
 
+    include('wc-checkout.php');
+
     register_activation_hook( __FILE__, 'wc_cust_val_init_options' );
     register_deactivation_hook( __FILE__, 'wc_cust_val_remove_options' );
 
