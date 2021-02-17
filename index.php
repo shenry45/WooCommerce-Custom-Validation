@@ -8,74 +8,70 @@
      * Author URI:        http://shawnphenry.com/
      **/
 
-    include('wc-checkout.php');
+    include('validate.php');
 
     register_activation_hook( __FILE__, 'wc_cust_val_init_options' );
     register_deactivation_hook( __FILE__, 'wc_cust_val_remove_options' );
 
     if ( !function_exists( 'wc_cust_val_init_options' ) ) {
         function wc_cust_val_init_options() {
-            add_option( 'wc_cust_blacklist', array() );
-            add_option( 'wc_cust_notice', '' );
+            add_option( 'cust_val_blacklist', array() );
+            add_option( 'cust_val_notice', '' );
         }
     }
 
     if ( !function_exists( 'wc_cust_val_remove_options' ) ) {
         function wc_cust_val_remove_options() {
-            delete_option( 'wc_cust_blacklist' );
-            delete_option( 'wc_cust_notice' );
+            delete_option( 'cust_val_blacklist' );
+            delete_option( 'cust_val_notice' );
         }
     }
 
     function cust_val_init() {
-        add_filter( 'woocommerce_settings_tabs_array', 'cust_val_admin_menus', 50 );
-        add_action( 'woocommerce_settings_tabs_wc_cust_val', 'cust_val_tab' );
-        add_action( 'woocommerce_update_options_cust_val', 'cust_val_update_settings' );
+        add_filter( 'woocommerce_settings_tabs_array', 'add_settings_tab', 50 );
+        add_action( 'woocommerce_settings_tabs_cust_val', 'settings_tab' );
+        add_action( 'woocommerce_update_options_cust_val', 'update_settings' );
     }
     add_action( 'admin_init', 'cust_val_init' );
 
-    /* WC Setting Tabs and Tab Settings */
-    if ( !function_exists( 'cust_val_admin_menus' ) ) {
-        // add_filter( 'woocommerce_settings_tabs_array', 'wc_cust_val_admin_menus', 50 );
-
-        function cust_val_admin_menus( $tabs ) {
-            $tabs['cust_val'] = __( 'Custom Validation', 'wc-custom-validation' );
-            return $tabs;
+    /*-----
+    WC Setting Tabs and Tab Settings
+    -----*/
+    if ( !function_exists( 'add_settings_tab' ) ) {
+        function add_settings_tab( $settings_tabs ) {
+            $settings_tabs['cust_val'] = __( 'Custom Validation', 'woocommerce-cust-val' );
+            return $settings_tabs;
         }
     }
 
-    if ( !function_exists( 'cust_val_tab' ) ) {
-        // add_action( 'woocommerce_settings_tabs_wc_cust_val', 'cust_val_tab' );
-
-        function cust_val_tab() {
-            woocommerce_admin_fields( cust_val_tab_settings() );
+    if ( !function_exists( 'settings_tab' ) ) {
+        function settings_tab() {
+            woocommerce_admin_fields( cust_get_settings() );
         }
     }
 
-    if ( !function_exists( ' cust_val_update_settings ' ) ) {
-        // add_action( 'woocommerce_update_options_settings_wc_cust_val', 'wc_cust_update_settings' );
-
-        function cust_val_update_settings() {
-            woocommerce_update_options( cust_val_tab_settings() );
+    if ( !function_exists( ' update_settings ' ) ) {
+        function update_settings() {
+            woocommerce_update_options( cust_get_settings() );
         }
     }
 
-    if ( !function_exists( 'cust_val_tab_settings' ) ) {
-        function cust_val_tab_settings() {
+    if ( !function_exists( 'cust_get_settings' ) ) {
+        function cust_get_settings() {
             $settings = array(
                 'section_title' => array(
-                    'name'     => __( 'Custom Checkout Validation', 'wc-custom-validation' ),
+                    'name'     => __( 'Custom Checkout Validation', 'woocommerce-cust-val' ),
                     'type'     => 'title',
                     'id'       => 'cust_val_section_title'
                 ),
                 'message' => array(
-                    'name' => __( 'Custom Message', 'wc-custom-validation' ),
+                    'name' => __( 'Custom Message', 'woocommerce-cust-val' ),
                     'type' => 'text',
-                    'desc' => __( '' , 'wc-custom-validation' ),
-                    'id'   => 'wc_cust_notice'
+                    'description' => __( '', 'woocommerce-cust-val' ),
+                    'id'   => 'cust_val_notice'
                 ),
                 'selections' => array(
-                    'name' => __( 'Active Filters', 'wc-custom-validation' ),
+                    'name' => __( 'Active Filters', 'woocommerce-cust-val' ),
                     'type' => 'multiselect',
                     'id' => 'cust_val_select',
                     'options' => array(
