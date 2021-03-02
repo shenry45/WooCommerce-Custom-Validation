@@ -1,12 +1,15 @@
 <?php
 
-    add_action( 'woocommerce_after_checkout_validation', 'misha_validate_fname_lname', 10, 2);
+    add_action( 'woocommerce_after_checkout_validation', 'wc_cust_validate', 10, 2);
     
-    function misha_validate_fname_lname( $fields, $errors ){
-        $user_values = array('Tacos', 'bbb', 'a@a.com');
+    function wc_cust_validate( $fields, $errors ){
+        $user_values = get_option( 'wc_cust_val_blacklist', array('') );
 
         // for each filter added, check if filter value found in a field
         foreach ($user_values as $entry) {
+            // echo "<script>console.log($entry)</script>";
+            echo $entry;
+
             $entry = strtolower( $entry );
 
             foreach ($fields as $field) {
