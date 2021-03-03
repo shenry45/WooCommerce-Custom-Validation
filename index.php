@@ -8,7 +8,7 @@
      * Author URI:        http://shawnphenry.com/
      **/
 
-    include('validate.php');
+    include('woocommerce/validate.php');
 
     add_filter( 'woocommerce_settings_tabs_array', 'cust_add_settings_tab', 50 );
     add_action( 'woocommerce_settings_tabs_cust_val', 'cust_settings_tab' );
@@ -78,14 +78,14 @@
                     'desc' => __( '', 'woocommerce-cust-val' ),
                     'id' => 'wc_cust_val_notice'
                 ),
-                'selections' => array(
-                    'name' => __( 'Active Filters', 'woocommerce-cust-val' ),
-                    'type' => 'multiselect',
-                    'id' => 'wc_cust_val_selections',
-                    'options' => array(
-                        'key' => 'value'
-                    )
-                ),
+                // 'selections' => array(
+                //     'name' => __( 'Active Filters', 'woocommerce-cust-val' ),
+                //     'type' => 'multiselect',
+                //     'id' => 'wc_cust_val_selections',
+                //     'options' => array(
+                //         'key' => 'value'
+                //     )
+                // ),
                 'add_filter' => array(
                     'name' => __( 'Add Filter', 'woocommerce-cust-val'),
                     'type' => 'text',
@@ -97,6 +97,8 @@
                      'id' => 'wc_cust_val_section_end'
                 )
                 );
+
+            // $filters = get_option( 'wc_cust_val_blacklist', array('No results found') );
 
             return apply_filters( 'wc_cust_val_settings', $settings );
         }
